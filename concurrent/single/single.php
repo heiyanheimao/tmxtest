@@ -32,6 +32,7 @@ class single
     /**检测token
      * @param int $id 用户id
      * @param array $data 提交的数据
+     * @return bool
      */
     public function checkToken($id, $data)
     {
