@@ -43,7 +43,56 @@ var_dump($redis->eval($script, $arg, $numkeys));
 时间复杂度:O(1)
 返回结果:切换成功true
 */
-var_dump($redis->select(0));exit;
+var_dump($redis->select(0));
+/*说明：del( $key1, ...$otherKeys)
+移除给定的一个或多个key。
+如果key不存在，则忽略该命令。
+时间复杂度:O(N)，N为要移除的key的数量。
+移除单个字符串类型的key，时间复杂度为O(1)。
+移除单个列表、集合、有序集合或哈希表类型的key，时间复杂度为O(M)，M为以上数据结构内的元素数量。
+返回结果:被移除key的数量。
+*/
+var_dump($redis->del('a'));
+/*说明：expire( $key, $ttl )
+为给定key设置生存时间。
+当key过期时，它会被自动删除。
+时间复杂度:O(1)
+返回结果:设置成功返回true。
+当key不存在或者不能为key设置生存时间时(比如在低于2.1.3中你尝试更新key的生存时间)，返回false。
+pexpire 设置微妙级别
+expireat 设置到时间戳过期 单位秒
+pexpireat 设置到时间戳过期 单位毫秒
+*/
+var_dump($redis->expire('b', 100));
+/*说明：time(void)
+获取时间戳以及毫秒数
+时间复杂度:O(1)
+返回结果:设置成功返回数组array(2) {
+  [0]=>
+  string(10) "1560330401"
+  [1]=>
+  string(6) "983685"
+}
+*/
+var_dump($redis->time());
+/*说明：ttl(key)
+返回给定key的剩余生存时间(time to live)(以秒为单位)。
+时间复杂度:O(1)
+返回结果:key的剩余生存时间(以秒为单位)。
+当key不存在，返回-2 。
+当key没有设置生存时间时，返回-1 。
+pttl 返回毫秒
+*/
+var_dump($redis->pttl('c'));
+/*说明：persist(key)
+移除给定key的生存时间。
+时间复杂度:O(1)
+返回结果:当生存时间移除成功时，返回true.
+如果key不存在或key没有设置生存时间，返回0。
+当key不存在，返回false 。
+当key没有设置生存时间时，返回false 。
+*/
+var_dump($redis->persist('c'));exit;
 //=================string操作============================
 /*说明：set(key,value,[timeout])设置字符串
 时间复杂度:O(1)
