@@ -92,7 +92,45 @@ var_dump($redis->pttl('c'));
 当key不存在，返回false 。
 当key没有设置生存时间时，返回false 。
 */
-var_dump($redis->persist('c'));exit;
+var_dump($redis->persist('c'));
+/*说明：save()
+同步保存当前数据库的数据到磁盘。rdb阻塞保存
+时间复杂度：
+O(N)， N 为要保存到数据库中的 key 的数量。
+返回值：
+总是返回 true
+*/
+var_dump($redis->save());
+/*说明：bgsave()
+在后台异步保存当前数据库的数据到磁盘。
+
+BGSAVE 命令执行之后立即返回 OK ，然后 Redis fork出一个新子进程，原来的 Redis 进程(父进程)继续处理客户端请求，而子进程则负责将数据保存到磁盘，然后退出。
+
+客户端可以通过 LASTSAVE 命令查看相关信息，判断 BGSAVE 命令是否执行成功。
+
+时间复杂度：
+
+O(N)， N 为要保存到数据库中的 key 的数量。
+
+返回值：
+
+总是返回true
+*/
+var_dump($redis->bgsave());
+/*说明：bgrewriteaof()
+异步(Asynchronously)重写 AOF 文件以反应当前数据库的状态。
+
+即使 BGREWRITEAOF 命令执行失败，旧 AOF 文件中的数据也不会因此丢失或改变。
+
+时间复杂度：
+
+O(N)， N 为要追加到 AOF 文件中的数据数量。
+
+返回值：
+
+总是返回true
+*/
+var_dump($redis->bgrewriteaof());exit;
 //=================string操作============================
 /*说明：set(key,value,[timeout])设置字符串
 时间复杂度:O(1)
