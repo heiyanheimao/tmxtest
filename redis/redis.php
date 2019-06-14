@@ -7,8 +7,7 @@
  */
 
 $redis = new Redis();
-$redis->connect('127.0.0.1');
-
+$redis->connect('127.0.0.1',6379);
 //=================系统操作==============================
 /*说明:type获取类型
 时间复杂度:O(1)
@@ -130,7 +129,7 @@ O(N)， N 为要追加到 AOF 文件中的数据数量。
 
 总是返回true
 */
-var_dump($redis->bgrewriteaof());exit;
+var_dump($redis->bgrewriteaof());
 //=================string操作============================
 /*说明：set(key,value,[timeout])设置字符串
 时间复杂度:O(1)
