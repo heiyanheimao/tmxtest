@@ -8,10 +8,10 @@
 
 /**实现crc16校验 用于计算redis key所在槽 crc16(key) & 16383的结果表示key所在槽
  * https://www.cnblogs.com/learnapi/p/9523075.html
- * @param $ptr
+ * @param string $ptr
  * @return int
  */
-function crc16($ptr)
+function crc16(string $ptr)
 {
     $crc_table = array(
         0x0,  0x1021,  0x2042,  0x3063,  0x4084,  0x50a5,  0x60c6,  0x70e7,
@@ -50,4 +50,19 @@ function crc16($ptr)
     for ($i = 0; $i < strlen($ptr); $i++)
         $crc =  $crc_table[(($crc>>8) ^ ord($ptr[$i]))] ^ (($crc<<8) & 0x00FFFF);
     return $crc;
+}
+
+/**
+ * 自定义将字符串换行成数字 可以用作mysql索引使用
+ * @param string $str
+ * @return string
+ */
+function hash64(string $str)
+{
+    $md5Str = md5($str);
+    $tmpStr = "";
+    for ($i = 0; $i <= 15; $i ++) {
+        $tmpStr .= $md5Str{2 * $i};
+    }
+    return base_convert($tmpStr, 16, 10);
 }
