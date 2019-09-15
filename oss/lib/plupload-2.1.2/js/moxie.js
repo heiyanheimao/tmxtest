@@ -3089,7 +3089,6 @@ define('moxie/file/Blob', [
 });
 
 // Included from: src/javascript/file/File.js
-
 /**
  * File.js
  *

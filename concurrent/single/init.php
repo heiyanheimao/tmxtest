@@ -15,4 +15,4 @@ $data = [
     'name' => 'zhangsan',
     'age' => 23
 ];
-var_dump($single->checkToken($id, $data));
+;var_dump($single->checkToken($id, $data));

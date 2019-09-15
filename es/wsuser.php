@@ -7,44 +7,29 @@
  */
 $server = new Swoole\WebSocket\Server("0.0.0.0", 9501);
 $server->on('open', function (Swoole\WebSocket\Server $server, $request)  {
-//    echo "server: handshake success with fd{$request->fd}\n";
-//    $info['server'] = $request->server;
-//    var_dump($request);
-    if ($request->fd == 3) {
-        $redis = new Redis();
-        $redis->connect('127.0.0.1', 6379);
-        $redis->set('server', $request->fd);
-    }
+
 });
 
 $server->on('message', function (Swoole\WebSocket\Server $server, $frame){
-//    echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+    go(function(){
+        $redis = new Swoole\Coroutine\Redis();
+        $redis->connect("127.0.0.1", 6379);
+        $redis->setDefer(true);
+        $redis->set('key1', 'value');
+        Co::sleep(10);
+        $redis2 = new Swoole\Coroutine\Redis();
+        $redis2->connect("127.0.0.1", 6379);
+        $redis2->setDefer(true);
+        $redis2->get('key1');
 
-    $redis = new Redis();
-    $redis->connect('127.0.0.1', 6379);
-    $serverFd = $redis->get('server');
-    if ($serverFd === false) {
-        $server->push($frame->fd, "服务未开启");
-    } elseif($serverFd == $frame->fd) {
-        var_dump($frame->data);
-        $server->push(intval(json_decode($frame->data, true)['fd']),$frame->data);
-    } else {
-        $server->push(intval($serverFd), $frame->fd);
-    }
+        $result1 = $redis->recv();
+        $result2 = $redis2->recv();
 
-//    if ($serverFd != $frame->fd) {
-//        $server->push($serverFd, "1");
-//    } else {
-//        $server->push(($frame->data) + 1);
-//    }
+        var_dump($result1, $result2);
+    });
 });
 
 $server->on('close', function ($ser, $fd) {
-    $redis = new Redis();
-    $redis->connect('127.0.0.1', 6379);
-    if ($redis->get('server') == $fd) {
-        $redis->del('server');
-    }
 
 });
 

@@ -5,4 +5,6 @@
  * Author   CD-JAY
  * Detail
  */
-phpinfo();
+//phpinfo();
+//var_dump(__DIR__);
+    $a = 123;
